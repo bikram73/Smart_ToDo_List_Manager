@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart To-Do | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; }
+        .navbar { background: linear-gradient(to right, #667eea, #764ba2); }
+        .task-card { transition: transform 0.2s; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .task-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .status-badge { font-size: 0.8rem; }
+        .completed-task { text-decoration: line-through; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark mb-4">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1"><i class="fas fa-check-double me-2"></i>Smart To-Do</span>
+            <a href="profile.html" class="btn btn-outline-light btn-sm me-2">Profile</a>
+            <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Stats Row -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center p-3 border-0 shadow-sm">
+                    <h3 class="text-primary" id="totalTasks">0</h3>
+                    <small class="text-muted">Total Tasks</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center p-3 border-0 shadow-sm">
+                    <h3 class="text-success" id="completedTasks">0</h3>
+                    <small class="text-muted">Completed</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center p-3 border-0 shadow-sm">
+                    <h3 class="text-warning" id="pendingTasks">0</h3>
+                    <small class="text-muted">Pending</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="prevMonth()"><i class="fas fa-chevron-left"></i></button>
+                    <h5 class="mb-0" id="currentMonth">Month</h5>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div id="calendar"></div>
+            </div>
+        </div>
+
+        <!-- Add Task -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Add New Task</h5>
+                <div class="row g-2">
+                    <div class="col-md-6"><input type="text" id="newTaskInput" class="form-control" placeholder="What needs to be done?"></div>
+                    <div class="col-md-2"><input type="date" id="taskDate" class="form-control"></div>
+                    <div class="col-md-2"><input type="time" id="startTime" class="form-control"></div>
+                    <div class="col-md-2"><input type="time" id="endTime" class="form-control"></div>
+                    <button class="btn btn-primary" onclick="addTask()"><i class="fas fa-plus"></i> Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task List -->
+        <h5 class="mb-3" id="tasksHeader">Your Tasks</h5>
+        <div id="taskList" class="row g-3">
+            <!-- Tasks will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        async function fetchTasks() {
+            try {
+                const response = await fetch('/api/todos', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.status === 401) logout();
+                const tasks = await response.json();
+                renderTasks(tasks);
+                updateStats(tasks);
+                renderCalendar(tasks); // Update calendar with task data
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        }
+
+        function renderTasks(tasks) {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            
+            tasks.forEach(task => {
+                const isCompleted = task.status === 'completed';
+                const isPast = task.task_date && new Date(task.task_date) < new Date(new Date().toDateString());
+                
+                let timeDisplay = '';
+                if (task.start_time && task.end_time) {
+                    timeDisplay = `<small class="text-muted d-block"><i class="far fa-clock me-1"></i>${task.start_time} - ${task.end_time}</small>`;
+                }
+
+                const card = `
+                    <div class="col-12">
+                        <div class="card task-card">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm ${isCompleted ? 'btn-success' : 'btn-outline-secondary'} me-3 rounded-circle" 
+                                            onclick="toggleComplete(${task.id}, ${!isCompleted})" 
+                                            style="width: 32px; height: 32px;">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <div>
+                                        <h6 class="mb-0 ${isCompleted ? 'completed-task' : ''}">${task.task}</h6>
+                                        <span class="badge ${isCompleted ? 'bg-success' : 'bg-warning'} status-badge">${task.status}</span>
+                                        ${timeDisplay}
+                                    </div>
+                                </div>
+                                <div>
+                                    ${!isCompleted && isPast ? `<button class="btn btn-sm btn-outline-info me-1" onclick="moveToToday(${task.id})" title="Move to Today"><i class="fas fa-calendar-day"></i></button>` : ''}
+                                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editTask(${task.id}, '${task.task}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteTask(${task.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += card;
+            });
+        }
+
+        function updateStats(tasks) {
+            document.getElementById('totalTasks').innerText = tasks.length;
+            document.getElementById('completedTasks').innerText = tasks.filter(t => t.status === 'completed').length;
+            document.getElementById('pendingTasks').innerText = tasks.filter(t => t.status === 'pending').length;
+        }
+
+        async function addTask() {
+            const input = document.getElementById('newTaskInput');
+            const task = input.value.trim();
+            const taskDate = document.getElementById('taskDate').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+
+            if (!task) return;
+
+            await fetch('/api/todos', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ 
+                    task, 
+                    task_date: taskDate || null, 
+                    start_time: startTime ? startTime + ":00" : null, 
+                    end_time: endTime ? endTime + ":00" : null 
+                })
+            });
+            input.value = '';
+            fetchTasks();
+        }
+
+        async function toggleComplete(id, isComplete) {
+            if (isComplete) {
+                await fetch(`/api/todos/${id}/complete`, {
+                    method: 'PATCH',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+            } else {
+                // Optional: Add endpoint to un-complete if needed, or just update status
+                await fetch(`/api/todos/${id}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status: 'pending' })
+                });
+            }
+            fetchTasks();
+        }
+
+        async function deleteTask(id) {
+            if(!confirm('Are you sure?')) return;
+            await fetch(`/api/todos/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            fetchTasks();
+        }
+
+        async function editTask(id, currentTask) {
+            const newTask = prompt("Update task:", currentTask);
+            if (newTask && newTask !== currentTask) {
+                await fetch(`/api/todos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ task: newTask })
+                });
+                fetchTasks();
+            }
+        }
+
+        async function moveToToday(id) {
+            await fetch(`/api/todos/${id}/move-to-today`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            fetchTasks();
+        }
+
+        function logout() { localStorage.removeItem('token'); window.location.href = 'login.html'; }
+
+        // Init
+        fetchTasks();
+    </script>
+    <script src="calendar.js"></script>
+</body>
+</html>
