@@ -1,4 +1,4 @@
-# 📝 📝 Smart To-Do List Manager (Advanced Dashboard)
+# 📝 Smart To-Do List Manager (Advanced Dashboard)
 
 A full-stack web application built with **FastAPI** and **Python**, featuring an advanced dashboard with a calendar view, email reminders, and user profile management. Designed for serverless deployment on **Vercel**.
 
