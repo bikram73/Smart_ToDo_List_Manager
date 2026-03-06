@@ -122,6 +122,8 @@ By default, the app uses **SQLite** for local development. To use **PostgreSQL**
 | `AUTH_DATABASE_URL` | Connection string for User DB (e.g., `postgresql://user:pass@host/auth_db`) |
 | `TODO_DATABASE_URL` | Connection string for Todo DB (e.g., `postgresql://user:pass@host/todo_db`) |
 | `JWT_SECRET` | Secret key for signing tokens (default: `supersecretkey`) |
+| `EMAIL_USER` | Gmail/SMTP username for sending reminders |
+| `EMAIL_PASS` | Gmail/SMTP App Password |
 
 ---
 
@@ -147,7 +149,9 @@ By default, the app uses **SQLite** for local development. To use **PostgreSQL**
 3.  **Configure Environment**:
     *   Add `AUTH_DATABASE_URL` and `TODO_DATABASE_URL` (use Neon or Supabase for free PostgreSQL).
     *   Add `JWT_SECRET`.
+    *   Add `EMAIL_USER` and `EMAIL_PASS` for email reminders.
 4.  **Deploy**: Click deploy! Vercel will handle the serverless backend.
+5.  **Set Up Cron Job**: Configure a Cron Job to hit `/api/cron/reminders` every 10 minutes.
 
 ---
 
