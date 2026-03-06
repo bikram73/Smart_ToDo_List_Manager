@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import os
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routes import auth_routes, todo_routes, user_routes
@@ -12,8 +13,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_, and_
 
 # Create Tables (For production, use Alembic migrations, but this works for MVP)
-AuthBase.metadata.create_all(bind=auth_engine)
-TodoBase.metadata.create_all(bind=todo_engine)
+# Wrap in try-except to prevent Vercel "Function Invocation Failed" if DB connection fails or is read-only
+try:
+    AuthBase.metadata.create_all(bind=auth_engine)
+    TodoBase.metadata.create_all(bind=todo_engine)
+except Exception as e:
+    print(f"Startup Error: Could not create tables. {e}")
 
 app = FastAPI(title="Smart To-Do List Manager")
 
@@ -88,4 +93,11 @@ def check_reminders():
         auth_db.close()
 
 # Mount frontend static files (Place this after API routes so API takes precedence)
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+# Use absolute path for Vercel environment
+current_dir = os.path.dirname(os.path.abspath(__file__))
+frontend_path = os.path.join(current_dir, "../frontend")
+
+if os.path.exists(frontend_path):
+    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
+elif os.path.exists("frontend"):
+    app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
