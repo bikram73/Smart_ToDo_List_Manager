@@ -279,10 +279,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* 8. Profile Page & Auth Pages */
 .auth-card {
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
     margin: auto;
-    padding: 2.5rem;
+    padding: 3rem;
     border-radius: 15px;
     background: var(--bg-card);
     box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
