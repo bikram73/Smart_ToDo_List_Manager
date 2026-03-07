@@ -10,7 +10,7 @@ EMAIL_PASSWORD = os.getenv("EMAIL_PASS", "*todoapp.notificationss*")
 
 # Auto-configure SMTP based on email domain if not explicitly set
 default_smtp = "smtp.gmail.com"
-if "@mail.com" in EMAIL_USER:
+if "mail.com" in EMAIL_USER.split("@")[-1]:
     default_smtp = "smtp.mail.com"
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", default_smtp) 
@@ -37,6 +37,13 @@ Thank you.
     msg["From"] = EMAIL_USER
     msg["To"] = to_email
 
-    with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
-        server.login(EMAIL_USER, EMAIL_PASSWORD)
-        server.sendmail(EMAIL_USER, to_email, msg.as_string())
+    print(f"📧 Sending email to {to_email} via {SMTP_SERVER}...")
+    
+    try:
+        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
+            server.login(EMAIL_USER, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_USER, to_email, msg.as_string())
+        print(f"✅ Email sent successfully to {to_email}")
+    except Exception as e:
+        print(f"❌ SMTP Error: {e}")
+        raise e

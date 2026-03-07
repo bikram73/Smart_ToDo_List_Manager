@@ -58,6 +58,7 @@ def check_reminders():
         now = datetime.utcnow() + timedelta(hours=5, minutes=30)
         current_time = now.time()
         current_date = now.date()
+        print(f"🕒 Checking reminders. Server Time (IST): {current_date} {current_time}")
 
         # Find tasks that are:
         # 1. Pending
@@ -74,6 +75,8 @@ def check_reminders():
                 and_(Todo.task_date == current_date, Todo.end_time < current_time)
             )
         ).all()
+
+        print(f"📋 Found {len(overdue_todos)} overdue tasks pending notification.")
 
         sent_count = 0
         for todo in overdue_todos:
