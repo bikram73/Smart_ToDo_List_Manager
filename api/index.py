@@ -15,6 +15,12 @@ from sqlalchemy import or_, and_
 # Create Tables (For production, use Alembic migrations, but this works for MVP)
 # Wrap in try-except to prevent Vercel "Function Invocation Failed" if DB connection fails or is read-only
 try:
+    # Debugging: Check if DB URL is set in environment
+    if not os.getenv("AUTH_DATABASE_URL"):
+        print("⚠️ WARNING: AUTH_DATABASE_URL is missing in this environment! App will fail to write to DB.")
+    else:
+        print("✅ AUTH_DATABASE_URL is correctly loaded.")
+
     AuthBase.metadata.create_all(bind=auth_engine)
     TodoBase.metadata.create_all(bind=todo_engine)
 except Exception as e:
