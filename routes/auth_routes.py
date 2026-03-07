@@ -25,7 +25,7 @@ def signup(user: UserCreate, db: Session = Depends(get_auth_db)):
         return {"message": "User created successfully"}
     except Exception as e:
         print(f"Signup Error: {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail=f"Signup failed: {str(e)}")
 
 @router.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_auth_db)):
