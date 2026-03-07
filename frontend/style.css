@@ -306,8 +306,14 @@ body {
 
 /* 10. Responsive Styles */
 @media (max-width: 768px) {
+    .navbar .container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
     .navbar-brand {
         font-size: 1.2rem;
+        margin-right: 0;
     }
     
     .card-body {
@@ -315,7 +321,44 @@ body {
     }
     
     .hero-card {
-        padding: 2rem;
+        padding: 2rem 1rem;
+        margin: 0 1rem;
+    }
+
+    .auth-card {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    /* Toast mobile positioning */
+    .toast-container {
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .custom-toast {
+        width: 100%;
+        max-width: 100%;
+        justify-content: center;
+    }
+
+    /* Calendar mobile adjustments */
+    #calendar .p-2 {
+        padding: 0.25rem !important;
+        min-height: 45px !important;
+    }
+    
+    #calendar .small {
+        font-size: 0.7rem;
+    }
+
+    /* Ensure stacked inputs have spacing */
+    .form-control, .btn {
+        margin-bottom: 0; /* Let bootstrap gap handle it, or specific overrides */
     }
 }
 
