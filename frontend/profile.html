@@ -11,7 +11,10 @@
     <nav class="navbar navbar-dark mb-4">
         <div class="container">
             <span class="navbar-brand mb-0 h1">Smart To-Do</span>
-            <a href="dashboard.html" class="btn btn-outline-light btn-sm">Back to Dashboard</a>
+            <div>
+                <a href="dashboard.html" class="btn btn-primary btn-sm me-2">Back to Dashboard</a>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
         </div>
     </nav>
 
@@ -45,6 +48,8 @@
     <script>
         const token = localStorage.getItem('token');
         if (!token) window.location.href = 'login.html';
+
+        function logout() { localStorage.removeItem('token'); window.location.href = 'login.html'; }
 
         async function loadProfile() {
             const res = await fetch('/api/user/profile', {
