@@ -5,19 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart To-Do | Welcome</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="d-flex align-items-center justify-content-center">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="hero-card">
-                    <h1 class="display-4 fw-bold mb-4">Smart To-Do List Manager</h1>
-                    <p class="lead mb-5">Organize your life with our secure, dual-database task manager.</p>
-                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                        <a href="login.html" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
-                        <a href="signup.html" class="btn btn-outline-primary btn-lg px-4">Sign Up</a>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-0 bg-transparent border-0">
+        <div class="container pt-3">
+            <span class="navbar-brand mb-0 h1"><i class="fas fa-check-double me-2"></i>Smart To-Do</span>
+            <div class="ms-auto">
+                <a href="login.html" class="btn btn-outline-primary btn-sm me-2">Login</a>
+                <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="container flex-grow-1 d-flex align-items-center justify-content-center py-5">
+        <div class="row justify-content-center w-100">
+            <div class="col-lg-8 text-center">
+                <div class="hero-card mb-5">
+                    <h1 class="display-4 fw-bold mb-4">Master Your Day with Smart To-Do List</h1>
+                    <p class="lead mb-4 text-muted">
+                        Experience the next generation of task management. 
+                        Organize, schedule, and track your life with our intelligent, secure, and beautiful platform.
+                    </p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-4">
+                        <a href="signup.html" class="btn btn-primary btn-lg px-5 gap-3">Get Started Free</a>
+                        <a href="login.html" class="btn btn-outline-light btn-lg px-5">Login</a>
                     </div>
+                    <div class="d-flex justify-content-center gap-4 text-muted small">
+                        <span><i class="fas fa-shield-alt me-1"></i> Secure</span>
+                        <span><i class="fas fa-bolt me-1"></i> Fast</span>
+                        <span><i class="fas fa-sync me-1"></i> Real-time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="container pb-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 card-glow-primary text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-calendar-alt fa-3x text-primary"></i>
+                    </div>
+                    <h4>Calendar View</h4>
+                    <p class="text-muted">Visualize your schedule with our intuitive monthly calendar. Never miss a deadline again.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 card-glow-warning text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-bell fa-3x text-warning"></i>
+                    </div>
+                    <h4>Smart Reminders</h4>
+                    <p class="text-muted">Get automatic email notifications for overdue tasks. We keep you on track.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 card-glow-success text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-chart-pie fa-3x text-success"></i>
+                    </div>
+                    <h4>Productivity Stats</h4>
+                    <p class="text-muted">Track your progress with real-time dashboards. See what you've accomplished.</p>
                 </div>
             </div>
         </div>
