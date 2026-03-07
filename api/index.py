@@ -91,7 +91,7 @@ def check_reminders():
             
             if user and user.email:
                 try:
-                    send_email_reminder(user.email, todo.task)
+                    send_email_reminder(user.email, todo.task, user.username)
                     todo.email_sent = True
                     sent_count += 1
                 except Exception as e:
