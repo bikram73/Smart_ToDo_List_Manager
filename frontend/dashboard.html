@@ -365,8 +365,20 @@
             window.location.href = 'login.html'; 
         }
 
+        // Background Reminder Check (Simulates Cron Job)
+        function startReminderCheck() {
+            // Check immediately on load
+            fetch('/api/cron/reminders').catch(err => console.log('Background check skipped'));
+            
+            // Check every 60 seconds
+            setInterval(() => {
+                fetch('/api/cron/reminders').catch(err => console.log('Background check skipped'));
+            }, 60000);
+        }
+
         // Init
         fetchTasks();
+        startReminderCheck();
     </script>
     <script src="calendar.js"></script>
 </body>
