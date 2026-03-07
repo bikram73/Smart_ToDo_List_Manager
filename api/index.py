@@ -8,7 +8,7 @@ from database.todo_db import engine as todo_engine, Base as TodoBase, SessionLoc
 from models.todo_model import Todo
 from models.user_model import User
 from services.email_service import send_email_reminder
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import or_, and_
 
@@ -53,7 +53,9 @@ def check_reminders():
     auth_db = AuthSessionLocal()
 
     try:
-        now = datetime.now()
+        # Fix for Timezone: Vercel runs in UTC, but users input Local Time (e.g., IST).
+        # We add 5 hours 30 minutes to UTC to get IST.
+        now = datetime.utcnow() + timedelta(hours=5, minutes=30)
         current_time = now.time()
         current_date = now.date()
 

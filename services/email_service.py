@@ -7,7 +7,13 @@ import os
 # Defaulting to Gmail as per PRD context, but using provided credentials.
 EMAIL_USER = os.getenv("EMAIL_USER", "todoapp.notificationss@mail.com")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASS", "*todoapp.notificationss*")
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com") 
+
+# Auto-configure SMTP based on email domain if not explicitly set
+default_smtp = "smtp.gmail.com"
+if "@mail.com" in EMAIL_USER:
+    default_smtp = "smtp.mail.com"
+
+SMTP_SERVER = os.getenv("SMTP_SERVER", default_smtp) 
 SMTP_PORT = 465
 
 def send_email_reminder(to_email: str, task_title: str):
