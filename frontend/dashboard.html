@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-dark mb-4">
         <div class="container">
@@ -79,6 +82,41 @@
     <script>
         const token = localStorage.getItem('token');
         if (!token) window.location.href = 'login.html';
+
+        // Toast Notification Logic
+        function showToast(message, type = 'primary') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `custom-toast ${type}`;
+            
+            let icon = '<i class="fas fa-info-circle"></i>';
+            if (type === 'success') icon = '<i class="fas fa-check-circle text-success"></i>';
+            if (type === 'danger') icon = '<i class="fas fa-exclamation-circle text-danger"></i>';
+            
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            container.appendChild(toast);
+            
+            // Trigger animation
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Check for fresh login
+        if (localStorage.getItem('loginSuccess')) {
+            localStorage.removeItem('loginSuccess');
+            // Fetch profile to get name
+            fetch('/api/user/profile', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.json())
+            .then(data => {
+                showToast(`Welcome back, ${data.username}!`, 'success');
+            })
+            .catch(() => showToast('Welcome back!', 'success'));
+        }
 
         async function fetchTasks() {
             try {
@@ -235,7 +273,11 @@
             fetchTasks();
         }
 
-        function logout() { localStorage.removeItem('token'); window.location.href = 'login.html'; }
+        function logout() { 
+            localStorage.removeItem('token'); 
+            localStorage.setItem('logoutSuccess', 'true');
+            window.location.href = 'login.html'; 
+        }
 
         // Init
         fetchTasks();
