@@ -9,6 +9,11 @@ router = APIRouter()
 @router.post("/signup")
 def signup(user: UserCreate, db: Session = Depends(get_auth_db)):
     try:
+        if len(user.password) < 10:
+            raise HTTPException(status_code=400, detail="Password must be at least 10 characters long")
+        if len(user.password) > 72:
+            raise HTTPException(status_code=400, detail="Password cannot exceed 72 characters")
+
         db_user = db.query(User).filter(User.email == user.email).first()
         if db_user:
             raise HTTPException(status_code=400, detail="Email already registered")
