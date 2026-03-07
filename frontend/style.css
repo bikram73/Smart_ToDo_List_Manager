@@ -50,6 +50,11 @@ a:hover {
     color: var(--success) !important;
 }
 
+.text-glow-primary {
+    color: var(--primary-blue) !important;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+}
+
 /* 2. Navbar */
 .navbar {
     background: rgba(15, 23, 42, 0.7) !important;
