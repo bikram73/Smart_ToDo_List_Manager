@@ -312,13 +312,12 @@ body {
 /* 10. Responsive Styles */
 @media (max-width: 768px) {
     .navbar .container {
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: row;
+        align-items: center;
     }
 
     .navbar-brand {
-        font-size: 1.2rem;
-        margin-right: 0;
+        font-size: 1.1rem;
     }
     
     .card-body {
@@ -374,6 +373,12 @@ body {
     
     .col-4 .card small {
         font-size: 0.65rem;
+    }
+
+    /* Index Page Mobile Typography */
+    .display-4 {
+        font-size: 2.2rem;
+        line-height: 1.2;
     }
 }
 
