@@ -94,6 +94,16 @@
                         <label class="form-label">Task Name</label>
                         <input type="text" class="form-control" id="editTaskInput">
                     </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Start Time</label>
+                        <input type="time" class="form-control" id="editStartTime">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="editEndTime">
+                    </div>
+                </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -221,7 +231,7 @@
                                 </div>
                                 <div>
                                     ${!isCompleted && isPast ? `<button class="btn btn-sm btn-outline-info me-1" onclick="moveToToday(${task.id})" title="Move to Today"><i class="fas fa-calendar-day"></i></button>` : ''}
-                                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editTask(${task.id}, '${task.task}')">
+                                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editTask(${task.id}, '${task.task}', '${task.start_time || ''}', '${task.end_time || ''}')">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger" onclick="deleteTask(${task.id})">
@@ -309,9 +319,11 @@
 
         // Modal Logic for Edit
         let editModal;
-        function editTask(id, currentTask) {
+        function editTask(id, currentTask, startTime, endTime) {
             document.getElementById('editTaskId').value = id;
             document.getElementById('editTaskInput').value = currentTask;
+            document.getElementById('editStartTime').value = startTime && startTime !== 'null' ? startTime.slice(0, 5) : '';
+            document.getElementById('editEndTime').value = endTime && endTime !== 'null' ? endTime.slice(0, 5) : '';
             editModal = new bootstrap.Modal(document.getElementById('editTaskModal'));
             editModal.show();
         }
@@ -319,11 +331,19 @@
         async function saveEditedTask() {
             const id = document.getElementById('editTaskId').value;
             const newTask = document.getElementById('editTaskInput').value;
+            const startTime = document.getElementById('editStartTime').value;
+            const endTime = document.getElementById('editEndTime').value;
+
+            const body = { 
+                task: newTask,
+                start_time: startTime ? startTime + ":00" : null,
+                end_time: endTime ? endTime + ":00" : null
+            };
             
             await fetch(`/api/todos/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ task: newTask })
+                body: JSON.stringify(body)
             });
             editModal.hide();
             showToast('Task updated successfully', 'success');

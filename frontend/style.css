@@ -199,11 +199,13 @@ a:hover {
 /* Fix for Date/Time picker icons in dark mode */
 input[type="date"], input[type="time"] {
     cursor: pointer;
+    color: #ffffff !important;
+    color-scheme: dark;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+    filter: none;
     transition: transform 0.2s ease, filter 0.2s ease;
     cursor: pointer;
 }
@@ -463,6 +465,6 @@ body {
 /* Hover effect for picker icons */
 input[type="date"]:hover::-webkit-calendar-picker-indicator,
 input[type="time"]:hover::-webkit-calendar-picker-indicator {
-    filter: invert(1) drop-shadow(0 0 4px rgba(59, 130, 246, 0.8));
+    filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.8));
     transform: scale(1.1);
 }
