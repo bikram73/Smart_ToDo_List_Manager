@@ -76,11 +76,11 @@
                     window.location.href = 'dashboard.html';
                 } else {
                     const data = await response.json();
-                    alert(data.detail || 'Login failed');
+                    showToast(data.detail || 'Login failed', 'danger');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred');
+                showToast('An error occurred. Please try again.', 'danger');
             }
         });
     </script>

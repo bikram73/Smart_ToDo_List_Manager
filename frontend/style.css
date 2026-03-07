@@ -13,6 +13,7 @@
     --success: #4ade80;
     --danger: #ef4444;
     --warning: #f59e0b;
+    color-scheme: dark; /* Forces native date/time pickers to use dark mode */
 }
 
 body {
@@ -196,9 +197,14 @@ a:hover {
 }
 
 /* Fix for Date/Time picker icons in dark mode */
+input[type="date"], input[type="time"] {
+    cursor: pointer;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
+    transition: transform 0.2s ease, filter 0.2s ease;
     cursor: pointer;
 }
 
@@ -410,6 +416,53 @@ body {
     transform: translateX(0);
 }
 
-.custom-toast.success { border-color: var(--success); }
-.custom-toast.danger { border-color: var(--danger); }
-.custom-toast.warning { border-color: var(--warning); }
+.custom-toast.success { 
+    border-color: var(--success); 
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.2);
+}
+.custom-toast.danger { 
+    border-color: var(--danger); 
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+.custom-toast.warning { 
+    border-color: var(--warning); 
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+}
+
+/* Styled Modals */
+.modal-content {
+    background-color: var(--bg-card);
+    border: 1px solid var(--primary-blue);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+    color: var(--text-main);
+}
+
+.modal-header {
+    background: rgba(59, 130, 246, 0.1);
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-footer {
+    background: rgba(15, 23, 42, 0.5);
+    border-top: 1px solid var(--border);
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+    background-color: #0f172a;
+}
+
+.modal-backdrop.show {
+    opacity: 0.85;
+}
+
+/* Hover effect for picker icons */
+input[type="date"]:hover::-webkit-calendar-picker-indicator,
+input[type="time"]:hover::-webkit-calendar-picker-indicator {
+    filter: invert(1) drop-shadow(0 0 4px rgba(59, 130, 246, 0.8));
+    transform: scale(1.1);
+}
