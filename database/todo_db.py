@@ -5,6 +5,10 @@ import os
 
 TODO_DATABASE_URL = os.getenv("TODO_DATABASE_URL", "sqlite:///./todo.db") # Fallback for local testing
 
+# Vercel/Neon uses a "postgres://" URL, but SQLAlchemy requires "postgresql://"
+if TODO_DATABASE_URL and TODO_DATABASE_URL.startswith("postgres://"):
+    TODO_DATABASE_URL = TODO_DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 engine = create_engine(TODO_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
