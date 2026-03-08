@@ -24,6 +24,9 @@ def send_email_reminder(to_email, task_name, user_name):
     sender_email = sender_email.strip()
     password = password.strip()
 
+    # Get App URL for buttons (Set APP_URL in Vercel Environment Variables)
+    app_url = os.getenv("APP_URL", "https://your-app.vercel.app").rstrip("/")
+
     print(f"📧 Attempting to send email as: {sender_email}")
 
     # SMTP server settings must match the email provider.
@@ -78,17 +81,11 @@ def send_email_reminder(to_email, task_name, user_name):
 
                                 <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.6; color: #e2e8f0;">Please visit your dashboard to take action:</p>
                                 
-                                <ul style="list-style: none; padding: 0; margin: 0 0 30px 0;">
-                                    <li style="margin-bottom: 10px; padding-left: 20px; position: relative; color: #94a3b8;">
-                                        <span style="color: #4ade80; position: absolute; left: 0;">✔</span> Mark as completed
-                                    </li>
-                                    <li style="margin-bottom: 10px; padding-left: 20px; position: relative; color: #94a3b8;">
-                                        <span style="color: #f59e0b; position: absolute; left: 0;">📅</span> Reschedule
-                                    </li>
-                                    <li style="margin-bottom: 10px; padding-left: 20px; position: relative; color: #94a3b8;">
-                                        <span style="color: #ef4444; position: absolute; left: 0;">🗑️</span> Delete task
-                                    </li>
-                                </ul>
+                                <div style="text-align: center; margin: 30px 0;">
+                                    <a href="{app_url}/login.html" style="background-color: #4ade80; color: #0f172a; padding: 12px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; display: inline-block; font-size: 14px;">✔ Mark as Completed</a>
+                                    <a href="{app_url}/login.html" style="background-color: #f59e0b; color: #0f172a; padding: 12px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; display: inline-block; font-size: 14px;">📅 Reschedule</a>
+                                    <a href="{app_url}/login.html" style="background-color: #ef4444; color: white; padding: 12px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 5px; display: inline-block; font-size: 14px;">🗑️ Delete Task</a>
+                                </div>
                             </td>
                         </tr>
                         <!-- Footer -->
