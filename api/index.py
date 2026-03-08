@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import os
+import asyncio
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routes import auth_routes, todo_routes, user_routes
@@ -102,6 +103,21 @@ def check_reminders():
     finally:
         db.close()
         auth_db.close()
+
+# Background Task for Local Development
+@app.on_event("startup")
+async def start_background_service():
+    asyncio.create_task(run_reminder_loop())
+
+async def run_reminder_loop():
+    print("🚀 Background reminder service started.")
+    while True:
+        try:
+            # Run sync function in thread to avoid blocking event loop
+            await asyncio.to_thread(check_reminders)
+        except Exception as e:
+            print(f"⚠️ Background loop error: {e}")
+        await asyncio.sleep(60) # Check every 60 seconds
 
 # Mount frontend static files (Place this after API routes so API takes precedence)
 # Use absolute path for Vercel environment
