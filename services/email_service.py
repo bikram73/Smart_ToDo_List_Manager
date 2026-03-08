@@ -5,6 +5,7 @@ import os
 
 def send_email_reminder(to_email, task_name, user_name):
     # Credentials from your request.
+    # Credentials must be set via environment variables (Vercel Dashboard or local .env)
     sender_email = os.getenv("EMAIL_USER")
     password = os.getenv("EMAIL_PASS")
 
