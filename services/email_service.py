@@ -5,8 +5,12 @@ import os
 
 def send_email_reminder(to_email, task_name, user_name):
     # Credentials from your request.
-    sender_email = os.getenv("EMAIL_USER", "todoapp.notificationss@gmail.com")
-    password = os.getenv("EMAIL_PASS", "gustytlkeegwetdf")
+    sender_email = os.getenv("EMAIL_USER")
+    password = os.getenv("EMAIL_PASS")
+
+    if not sender_email or not password:
+        print("❌ Error: EMAIL_USER or EMAIL_PASS environment variables are not set.")
+        return
 
     # SMTP server settings must match the email provider.
     if sender_email.endswith("@mail.com"):
