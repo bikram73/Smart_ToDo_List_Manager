@@ -3,6 +3,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 
+# Load environment variables from .env file for local development
+try:
+    from dotenv import load_dotenv, find_dotenv
+    load_dotenv(find_dotenv(), override=True)
+except ImportError:
+    pass
+
 def send_email_reminder(to_email, task_name, user_name):
     # Credentials from your request.
     # Credentials must be set via environment variables (Vercel Dashboard or local .env)
@@ -12,6 +19,12 @@ def send_email_reminder(to_email, task_name, user_name):
     if not sender_email or not password:
         print("❌ Error: EMAIL_USER or EMAIL_PASS environment variables are not set.")
         return
+
+    # Clean up credentials (remove potential whitespace from .env)
+    sender_email = sender_email.strip()
+    password = password.strip()
+
+    print(f"📧 Attempting to send email as: {sender_email}")
 
     # SMTP server settings must match the email provider.
     if sender_email.endswith("@mail.com"):
